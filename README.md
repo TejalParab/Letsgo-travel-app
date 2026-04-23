@@ -9,4 +9,4 @@ A minimal-input travel planner that generates dynamic itineraries.
 - Mood-based updates
 
 ## Live Demo
-https://tejalparab.github.io/letsgo-travel-app
+https://tejalparab.github.io/Letsgo-travel-app/
