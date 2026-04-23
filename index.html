@@ -1,80 +1,156 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Let's Go!!</title>
+  <title>Let’s Go!!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: Arial; padding: 20px; }
+    body { font-family: Arial; margin: 0; padding: 20px; }
+    .screen { display: none; }
+    .active { display: block; }
     button { padding: 10px; margin: 5px; }
-    .card { border: 1px solid #ddd; padding: 10px; margin-top: 10px; }
+    .card { border: 1px solid #ddd; padding: 10px; margin: 10px 0; }
+    input, select { padding: 8px; width: 100%; margin: 10px 0; }
+    .nav { position: fixed; bottom: 0; width: 100%; background: #eee; padding: 10px; text-align: center; }
   </style>
 </head>
 
 <body>
 
-<h1>Let’s Go!! ✈️</h1>
+<!-- HOME -->
+<div id="home" class="screen active">
+  <h1>Let’s Go!! ✈️</h1>
+  <button onclick="goTo('create1')">Start New Trip</button>
+</div>
 
-<h3>Create Trip</h3>
+<!-- CREATE STEP 1 -->
+<div id="create1" class="screen">
+  <h2>Where to?</h2>
+  <input id="destination" placeholder="Destination" />
+  <button onclick="goTo('create2')">Next</button>
+</div>
 
-<input id="destination" placeholder="Enter destination" />
-<br><br>
+<!-- CREATE STEP 2 -->
+<div id="create2" class="screen">
+  <h2>Travel Style</h2>
+  <select id="budget">
+    <option>Low</option>
+    <option>Medium</option>
+    <option>High</option>
+  </select>
 
-<select id="budget">
-  <option>Low</option>
-  <option>Medium</option>
-  <option>High</option>
-</select>
+  <select id="style">
+    <option>Relaxed</option>
+    <option>Balanced</option>
+    <option>Packed</option>
+  </select>
 
-<br><br>
+  <button onclick="goTo('create3')">Next</button>
+</div>
 
-<button onclick="createTrip()">Create Trip</button>
+<!-- CREATE STEP 3 -->
+<div id="create3" class="screen">
+  <h2>Interests (pick 3)</h2>
+  <button onclick="selectInterest(this)">Food</button>
+  <button onclick="selectInterest(this)">Nature</button>
+  <button onclick="selectInterest(this)">Culture</button>
+  <button onclick="selectInterest(this)">Shopping</button>
+  <button onclick="selectInterest(this)">Nightlife</button>
 
-<div id="itinerary"></div>
+  <p id="count">0/3 selected</p>
+
+  <button onclick="createTrip()">Create Trip</button>
+</div>
+
+<!-- ITINERARY -->
+<div id="trip" class="screen">
+  <h2 id="tripTitle"></h2>
+
+  <div id="itinerary"></div>
+
+  <button onclick="changeMood()">Change Mood</button>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <button onclick="goTo('home')">Home</button>
+  <button onclick="goTo('trip')">Trip</button>
+</div>
 
 <script>
+let selectedInterests = [];
+let tripData = {};
+
+function goTo(screen) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screen).classList.add('active');
+}
+
+function selectInterest(btn) {
+  const value = btn.innerText;
+
+  if (selectedInterests.includes(value)) {
+    selectedInterests = selectedInterests.filter(i => i !== value);
+    btn.style.background = "";
+  } else {
+    if (selectedInterests.length >= 3) return;
+    selectedInterests.push(value);
+    btn.style.background = "lightgreen";
+  }
+
+  document.getElementById("count").innerText = selectedInterests.length + "/3 selected";
+}
+
 function createTrip() {
-  const dest = document.getElementById("destination").value;
-  const budget = document.getElementById("budget").value;
+  tripData = {
+    destination: document.getElementById("destination").value,
+    budget: document.getElementById("budget").value,
+    style: document.getElementById("style").value,
+    interests: selectedInterests
+  };
 
-  document.getElementById("itinerary").innerHTML = `
-    <h2>${dest} Trip</h2>
+  document.getElementById("tripTitle").innerText = tripData.destination + " Trip";
 
+  generateItinerary();
+  goTo('trip');
+}
+
+function generateItinerary() {
+  const container = document.getElementById("itinerary");
+
+  container.innerHTML = `
     <div class="card">
-      Morning: Visit Local Market
+      Morning: Explore Local Market
       <br>
       <button onclick="replace(this)">Replace</button>
-      <button onclick="remove(this)">Remove</button>
+      <button onclick="removeCard(this)">Remove</button>
     </div>
 
     <div class="card">
-      Afternoon: Lunch at Cafe
+      Afternoon: Lunch Spot
       <br>
       <button onclick="replace(this)">Replace</button>
-      <button onclick="remove(this)">Remove</button>
+      <button onclick="removeCard(this)">Remove</button>
     </div>
 
     <div class="card">
-      Evening: Sunset Spot
+      Evening: Sunset View
       <br>
       <button onclick="replace(this)">Replace</button>
-      <button onclick="remove(this)">Remove</button>
+      <button onclick="removeCard(this)">Remove</button>
     </div>
-
-    <br>
-    <button onclick="changeMood()">Change Mood</button>
   `;
 }
 
-function remove(btn) {
+function removeCard(btn) {
   btn.parentElement.remove();
 }
 
 function replace(btn) {
-  btn.parentElement.innerHTML = "New Activity Suggested!";
+  btn.parentElement.innerHTML = "✨ New activity suggested!";
 }
 
 function changeMood() {
-  alert("Switched mood! Updated itinerary.");
+  alert("Mood changed! Plan updated.");
 }
 </script>
 
