@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Let's Go!!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    button { padding: 10px; margin: 5px; }
+    .card { border: 1px solid #ddd; padding: 10px; margin-top: 10px; }
+  </style>
+</head>
+
+<body>
+
+<h1>Let’s Go!! ✈️</h1>
+
+<h3>Create Trip</h3>
+
+<input id="destination" placeholder="Enter destination" />
+<br><br>
+
+<select id="budget">
+  <option>Low</option>
+  <option>Medium</option>
+  <option>High</option>
+</select>
+
+<br><br>
+
+<button onclick="createTrip()">Create Trip</button>
+
+<div id="itinerary"></div>
+
+<script>
+function createTrip() {
+  const dest = document.getElementById("destination").value;
+  const budget = document.getElementById("budget").value;
+
+  document.getElementById("itinerary").innerHTML = `
+    <h2>${dest} Trip</h2>
+
+    <div class="card">
+      Morning: Visit Local Market
+      <br>
+      <button onclick="replace(this)">Replace</button>
+      <button onclick="remove(this)">Remove</button>
+    </div>
+
+    <div class="card">
+      Afternoon: Lunch at Cafe
+      <br>
+      <button onclick="replace(this)">Replace</button>
+      <button onclick="remove(this)">Remove</button>
+    </div>
+
+    <div class="card">
+      Evening: Sunset Spot
+      <br>
+      <button onclick="replace(this)">Replace</button>
+      <button onclick="remove(this)">Remove</button>
+    </div>
+
+    <br>
+    <button onclick="changeMood()">Change Mood</button>
+  `;
+}
+
+function remove(btn) {
+  btn.parentElement.remove();
+}
+
+function replace(btn) {
+  btn.parentElement.innerHTML = "New Activity Suggested!";
+}
+
+function changeMood() {
+  alert("Switched mood! Updated itinerary.");
+}
+</script>
+
+</body>
+</html>
